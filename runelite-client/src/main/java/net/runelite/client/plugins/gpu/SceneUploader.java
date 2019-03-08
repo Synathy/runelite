@@ -59,31 +59,20 @@ class SceneUploader
 		vertexbuffer.clear();
 		uvBuffer.clear();
 
+		Tile[][][] tiles = scene.getTiles();
+		Tile currentTile;
+		int x, y;
 		for (int z = 0; z < Constants.MAX_Z; ++z)
 		{
-			for (int x = 0; x < Constants.SCENE_SIZE; ++x)
+			for (x = 0; x < Constants.SCENE_SIZE; ++x)
 			{
-				for (int y = 0; y < Constants.SCENE_SIZE; ++y)
+				for (y = 0; y < Constants.SCENE_SIZE; ++y)
 				{
-					Tile tile = scene.getTiles()[z][x][y];
-					if (tile != null)
+					currentTile = tiles[z][x][y];
+					if (currentTile != null)
 					{
-						reset(tile);
-					}
-				}
-			}
-		}
-
-		for (int z = 0; z < Constants.MAX_Z; ++z)
-		{
-			for (int x = 0; x < Constants.SCENE_SIZE; ++x)
-			{
-				for (int y = 0; y < Constants.SCENE_SIZE; ++y)
-				{
-					Tile tile = scene.getTiles()[z][x][y];
-					if (tile != null)
-					{
-						upload(tile, vertexbuffer, uvBuffer);
+						reset(currentTile);
+						upload(currentTile, vertexbuffer, uvBuffer);
 					}
 				}
 			}
@@ -144,13 +133,12 @@ class SceneUploader
 		GameObject[] gameObjects = tile.getGameObjects();
 		for (GameObject gameObject : gameObjects)
 		{
-			if (gameObject == null)
+			if (gameObject != null)
 			{
-				continue;
-			}
-			if (gameObject.getRenderable() instanceof Model)
-			{
-				((Model) gameObject.getRenderable()).setBufferOffset(-1);
+				if (gameObject.getRenderable() instanceof Model)
+				{
+					((Model) gameObject.getRenderable()).setBufferOffset(-1);
+				}
 			}
 		}
 	}
@@ -252,15 +240,13 @@ class SceneUploader
 		GameObject[] gameObjects = tile.getGameObjects();
 		for (GameObject gameObject : gameObjects)
 		{
-			if (gameObject == null)
+			if (gameObject != null)
 			{
-				continue;
-			}
-
-			Renderable renderable = gameObject.getRenderable();
-			if (renderable instanceof Model)
-			{
-				uploadModel((Model) gameObject.getRenderable(), vertexBuffer, uvBuffer);
+				Renderable renderable = gameObject.getRenderable();
+				if (renderable instanceof Model)
+				{
+					uploadModel((Model) renderable, vertexBuffer, uvBuffer);
+				}
 			}
 		}
 	}
@@ -372,40 +358,38 @@ class SceneUploader
 			final int colorB = triangleColorB[i];
 			final int colorC = triangleColorC[i];
 
-			if (colorA == 12345678)
+			if (colorA != 12345678)
 			{
-				continue;
-			}
+				cnt += 3;
 
-			cnt += 3;
+				int vertexXA = vertexX[triangleA] - baseX;
+				int vertexZA = vertexZ[triangleA] - baseY;
 
-			int vertexXA = vertexX[triangleA] - baseX;
-			int vertexZA = vertexZ[triangleA] - baseY;
+				int vertexXB = vertexX[triangleB] - baseX;
+				int vertexZB = vertexZ[triangleB] - baseY;
 
-			int vertexXB = vertexX[triangleB] - baseX;
-			int vertexZB = vertexZ[triangleB] - baseY;
+				int vertexXC = vertexX[triangleC] - baseX;
+				int vertexZC = vertexZ[triangleC] - baseY;
 
-			int vertexXC = vertexX[triangleC] - baseX;
-			int vertexZC = vertexZ[triangleC] - baseY;
+				vertexBuffer.put(vertexXA, vertexY[triangleA], vertexZA, colorA);
+				vertexBuffer.put(vertexXB, vertexY[triangleB], vertexZB, colorB);
+				vertexBuffer.put(vertexXC, vertexY[triangleC], vertexZC, colorC);
 
-			vertexBuffer.put(vertexXA, vertexY[triangleA], vertexZA, colorA);
-			vertexBuffer.put(vertexXB, vertexY[triangleB], vertexZB, colorB);
-			vertexBuffer.put(vertexXC, vertexY[triangleC], vertexZC, colorC);
-
-			if (triangleTextures != null)
-			{
-				if (triangleTextures[i] != -1)
+				if (triangleTextures != null)
 				{
-					float tex = triangleTextures[i] + 1f;
-					uvBuffer.put(tex, vertexXA / 128f, vertexZA / 128f, 0f);
-					uvBuffer.put(tex, vertexXB / 128f, vertexZB / 128f, 0f);
-					uvBuffer.put(tex, vertexXC / 128f, vertexZC / 128f, 0f);
-				}
-				else
-				{
-					uvBuffer.put(0, 0, 0, 0f);
-					uvBuffer.put(0, 0, 0, 0f);
-					uvBuffer.put(0, 0, 0, 0f);
+					if (triangleTextures[i] != -1)
+					{
+						float tex = triangleTextures[i] + 1f;
+						uvBuffer.put(tex, vertexXA / 128f, vertexZA / 128f, 0f);
+						uvBuffer.put(tex, vertexXB / 128f, vertexZB / 128f, 0f);
+						uvBuffer.put(tex, vertexXC / 128f, vertexZC / 128f, 0f);
+					}
+					else
+					{
+						uvBuffer.put(0, 0, 0, 0f);
+						uvBuffer.put(0, 0, 0, 0f);
+						uvBuffer.put(0, 0, 0, 0f);
+					}
 				}
 			}
 		}

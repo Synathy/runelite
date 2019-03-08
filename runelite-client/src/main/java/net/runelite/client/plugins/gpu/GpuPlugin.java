@@ -1039,15 +1039,13 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 			for (int id = 0; id < textures.length; ++id)
 			{
 				Texture texture = textures[id];
-				if (texture == null)
+				if (texture != null)
 				{
-					continue;
+					textureProvider.load(id); // trips the texture load flag which lets textures animate
+
+					textureOffsets[id * 2] = texture.getU();
+					textureOffsets[id * 2 + 1] = texture.getV();
 				}
-
-				textureProvider.load(id); // trips the texture load flag which lets textures animate
-
-				textureOffsets[id * 2] = texture.getU();
-				textureOffsets[id * 2 + 1] = texture.getV();
 			}
 
 			// Bind uniforms
@@ -1240,12 +1238,10 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged gameStateChanged)
 	{
-		if (gameStateChanged.getGameState() != GameState.LOGGED_IN)
+		if (gameStateChanged.getGameState() == GameState.LOGGED_IN)
 		{
-			return;
+			uploadScene();
 		}
-
-		uploadScene();
 	}
 
 	private void uploadScene()

@@ -181,55 +181,53 @@ class TextureManager
 	void animate(Texture texture, int diff)
 	{
 		final int[] pixels = texture.getPixels();
-		if (pixels == null)
+		if (pixels != null)
 		{
-			return;
+			final int animationSpeed = texture.getAnimationSpeed();
+			final float uvdiff = pixels.length == 4096 ? PERC_64 : PERC_128;
+
+			float u = texture.getU();
+			float v = texture.getV();
+
+			int offset = animationSpeed * diff;
+			float d = (float) offset * uvdiff;
+
+			switch (texture.getAnimationDirection())
+			{
+				case 1:
+					v -= d;
+					if (v < 0f)
+					{
+						v += 1f;
+					}
+					break;
+				case 3:
+					v += d;
+					if (v > 1f)
+					{
+						v -= 1f;
+					}
+					break;
+				case 2:
+					u -= d;
+					if (u < 0f)
+					{
+						u += 1f;
+					}
+					break;
+				case 4:
+					u += d;
+					if (u > 1f)
+					{
+						u -= 1f;
+					}
+					break;
+				default:
+					return;
+			}
+
+			texture.setU(u);
+			texture.setV(v);
 		}
-
-		final int animationSpeed = texture.getAnimationSpeed();
-		final float uvdiff = pixels.length == 4096 ? PERC_64 : PERC_128;
-
-		float u = texture.getU();
-		float v = texture.getV();
-
-		int offset = animationSpeed * diff;
-		float d = (float) offset * uvdiff;
-
-		switch (texture.getAnimationDirection())
-		{
-			case 1:
-				v -= d;
-				if (v < 0f)
-				{
-					v += 1f;
-				}
-				break;
-			case 3:
-				v += d;
-				if (v > 1f)
-				{
-					v -= 1f;
-				}
-				break;
-			case 2:
-				u -= d;
-				if (u < 0f)
-				{
-					u += 1f;
-				}
-				break;
-			case 4:
-				u += d;
-				if (u > 1f)
-				{
-					u -= 1f;
-				}
-				break;
-			default:
-				return;
-		}
-
-		texture.setU(u);
-		texture.setV(v);
 	}
 }
