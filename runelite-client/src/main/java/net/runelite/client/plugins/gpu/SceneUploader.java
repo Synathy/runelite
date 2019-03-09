@@ -399,36 +399,34 @@ class SceneUploader
 
 	private void uploadModel(Model model, GpuIntBuffer vertexBuffer, GpuFloatBuffer uvBuffer)
 	{
-		if (model.getBufferOffset() > 0)
+		if (model.getBufferOffset() <= 0)
 		{
-			return;
-		}
+			model.setBufferOffset(offset);
+			if (model.getFaceTextures() != null)
+			{
+				model.setUvBufferOffset(uvoffset);
+			}
+			else
+			{
+				model.setUvBufferOffset(-1);
+			}
+			model.setSceneId(sceneId);
 
-		model.setBufferOffset(offset);
-		if (model.getFaceTextures() != null)
-		{
-			model.setUvBufferOffset(uvoffset);
-		}
-		else
-		{
-			model.setUvBufferOffset(-1);
-		}
-		model.setSceneId(sceneId);
+			vertexBuffer.ensureCapacity(model.getTrianglesCount() * 12);
+			uvBuffer.ensureCapacity(model.getTrianglesCount() * 12);
 
-		vertexBuffer.ensureCapacity(model.getTrianglesCount() * 12);
-		uvBuffer.ensureCapacity(model.getTrianglesCount() * 12);
+			final int triangleCount = model.getTrianglesCount();
+			int len = 0;
+			for (int i = 0; i < triangleCount; ++i)
+			{
+				len += pushFace(model, i, vertexBuffer, uvBuffer);
+			}
 
-		final int triangleCount = model.getTrianglesCount();
-		int len = 0;
-		for (int i = 0; i < triangleCount; ++i)
-		{
-			len += pushFace(model, i, vertexBuffer, uvBuffer);
-		}
-
-		offset += len;
-		if (model.getFaceTextures() != null)
-		{
-			uvoffset += len;
+			offset += len;
+			if (model.getFaceTextures() != null)
+			{
+				uvoffset += len;
+			}
 		}
 	}
 
