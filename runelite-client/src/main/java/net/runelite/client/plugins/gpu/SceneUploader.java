@@ -105,10 +105,11 @@ class SceneUploader
 			if (wallObject.getRenderable1() instanceof Model)
 			{
 				((Model) wallObject.getRenderable1()).setBufferOffset(-1);
-			}
-			if (wallObject.getRenderable2() instanceof Model)
-			{
-				((Model) wallObject.getRenderable2()).setBufferOffset(-1);
+
+				if (wallObject.getRenderable2() instanceof Model)
+				{
+					((Model) wallObject.getRenderable2()).setBufferOffset(-1);
+				}
 			}
 		}
 
@@ -202,12 +203,12 @@ class SceneUploader
 			if (renderable1 instanceof Model)
 			{
 				uploadModel((Model) renderable1, vertexBuffer, uvBuffer);
-			}
 
-			Renderable renderable2 = wallObject.getRenderable2();
-			if (renderable2 instanceof Model)
-			{
-				uploadModel((Model) renderable2, vertexBuffer, uvBuffer);
+				Renderable renderable2 = wallObject.getRenderable2();
+				if (renderable2 instanceof Model)
+				{
+					uploadModel((Model) renderable2, vertexBuffer, uvBuffer);
+				}
 			}
 		}
 
@@ -228,12 +229,12 @@ class SceneUploader
 			if (renderable instanceof Model)
 			{
 				uploadModel((Model) renderable, vertexBuffer, uvBuffer);
-			}
 
-			Renderable renderable2 = decorativeObject.getRenderable2();
-			if (renderable2 instanceof Model)
-			{
-				uploadModel((Model) renderable2, vertexBuffer, uvBuffer);
+				Renderable renderable2 = decorativeObject.getRenderable2();
+				if (renderable2 instanceof Model)
+				{
+					uploadModel((Model) renderable2, vertexBuffer, uvBuffer);
+				}
 			}
 		}
 

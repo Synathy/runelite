@@ -93,12 +93,14 @@ class TextureManager
 			return false;
 		}
 
+		Texture texture;
+		int[] pixels;
 		for (int textureId = 0; textureId < textures.length; textureId++)
 		{
-			Texture texture = textures[textureId];
+			texture = textures[textureId];
 			if (texture != null)
 			{
-				int[] pixels = textureProvider.load(textureId);
+				pixels = textureProvider.load(textureId);
 				if (pixels == null)
 				{
 					return false;
@@ -150,9 +152,10 @@ class TextureManager
 
 		int offset = (textureWidth - width) * 4;
 
+		int x;
 		for (int y = 0; y < height; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (x = 0; x < width; x++)
 			{
 				int rgb = srcPixels[srcPixelIdx++];
 				if (rgb != 0)
