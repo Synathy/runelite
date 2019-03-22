@@ -467,10 +467,10 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 		Template template = new Template(resourceLoader);
 		String source = template.process(resourceLoader.apply("geom.glsl"));
 
-		template = new Template(resourceLoader);
+		//template = new Template(resourceLoader);
 		String vertSource = template.process(resourceLoader.apply("vert.glsl"));
 
-		template = new Template(resourceLoader);
+		//template = new Template(resourceLoader);
 		String fragSource = template.process(resourceLoader.apply("frag.glsl"));
 
 		GLUtil.loadShaders(gl, glProgram, glVertexShader, glGeomShader, glFragmentShader,
@@ -480,19 +480,19 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 
 		glComputeProgram = gl.glCreateProgram();
 		glComputeShader = gl.glCreateShader(gl.GL_COMPUTE_SHADER);
-		template = new Template(resourceLoader);
+		//template = new Template(resourceLoader);
 		source = template.process(resourceLoader.apply("comp.glsl"));
 		GLUtil.loadComputeShader(gl, glComputeProgram, glComputeShader, source);
 
 		glSmallComputeProgram = gl.glCreateProgram();
 		glSmallComputeShader = gl.glCreateShader(gl.GL_COMPUTE_SHADER);
-		template = new Template(resourceLoader);
+		//template = new Template(resourceLoader);
 		source = template.process(resourceLoader.apply("comp_small.glsl"));
 		GLUtil.loadComputeShader(gl, glSmallComputeProgram, glSmallComputeShader, source);
 
 		glUnorderedComputeProgram = gl.glCreateProgram();
 		glUnorderedComputeShader = gl.glCreateShader(gl.GL_COMPUTE_SHADER);
-		template = new Template(resourceLoader);
+		//template = new Template(resourceLoader);
 		source = template.process(resourceLoader.apply("comp_unordered.glsl"));
 		GLUtil.loadComputeShader(gl, glUnorderedComputeProgram, glUnorderedComputeShader, source);
 
